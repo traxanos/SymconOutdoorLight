@@ -1,0 +1,11 @@
+{
+  "id": "{CFF937C7-58C1-A3EC-386F-296634D1FAE7}",
+  "name": "OutdoorLight",
+  "type": 3,
+  "vendor": "Others",
+  "aliases": ["Outdoor Light"],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "OL"
+}
