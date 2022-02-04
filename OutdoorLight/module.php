@@ -36,7 +36,7 @@ class OutdoorLight extends IPSModule
         // Never delete this line!
         parent::ApplyChanges();
 
-        if ($this->ReadPropertyInteger('BrightnessId') > 0) {
+        if ($this->ReadPropertyInteger('BrightnessId') == 0) {
             $this->SetStatus(201);
             return;
         }
