@@ -1,116 +1,121 @@
 {
-  "elements": [
-    {
-      "type": "SelectVariable",
-      "name": "BrightnessId",
-      "caption": "Helligkeitssensor",
-      "validVariableTypes": [1, 2]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Morgens",
-      "expanded": true,
-      "items": [
+    "elements": [
         {
-          "type": "CheckBox",
-          "name": "MorningActive",
-          "caption": "Aktiv"
+            "type": "SelectVariable",
+            "name": "BrightnessId",
+            "caption": "Brightness sensor",
+            "validVariableTypes": [
+                1,
+                2
+            ]
         },
         {
-          "type": "RowLayout",
-          "items": [
-            {
-              "type": "NumberSpinner",
-              "name": "MorningLux",
-              "caption": "Schwellwert",
-              "digits": 0,
-              "suffix": "lx"
-            },
-            {
-              "type": "NumberSpinner",
-              "name": "MorningDuration",
-              "caption": "Dauer",
-              "digits": 0,
-              "suffix": "min."
-            }
-          ]
+            "type": "ExpansionPanel",
+            "caption": "Morning",
+            "expanded": true,
+            "items": [
+                {
+                    "type": "CheckBox",
+                    "name": "MorningActive",
+                    "caption": "Active"
+                },
+                {
+                    "type": "RowLayout",
+                    "items": [
+                        {
+                            "type": "NumberSpinner",
+                            "name": "MorningLux",
+                            "caption": "Threshold",
+                            "digits": 0,
+                            "suffix": "lx"
+                        },
+                        {
+                            "type": "NumberSpinner",
+                            "name": "MorningDuration",
+                            "caption": "Duration",
+                            "digits": 0,
+                            "suffix": "min."
+                        }
+                    ]
+                },
+                {
+                    "type": "RowLayout",
+                    "items": [
+                        {
+                            "type": "SelectTime",
+                            "name": "MorningStartTime",
+                            "caption": "Start time"
+                        },
+                        {
+                            "type": "SelectTime",
+                            "name": "MorningEndTime",
+                            "caption": "End time"
+                        }
+                    ]
+                },
+                {
+                    "type": "Label",
+                    "caption": "Morning-Helptext"
+                }
+            ]
         },
         {
-          "type": "RowLayout",
-          "items": [
-            {
-              "type": "SelectTime",
-              "name": "MorningStartTime",
-              "caption": "Startzeit"
-            },
-            {
-              "type": "SelectTime",
-              "name": "MorningEndTime",
-              "caption": "Endzeit"
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "Sobald der Schwellwert erreicht wird, wird die Startzeit für den nächsten Tag berechnet. Hierzu wird die Dauer von der aktuellen Zeit\nabgezogen und als Startzeit genutzt. Vorrausetzung ist, dass diese nicht vor der konfigurierten Startzeit liegt, welche alternativ genutzt wird.\nAusgeschaltet wird sobald die Dauer abgelaufen ist oder die Endzeit erreicht wurde."
+            "type": "ExpansionPanel",
+            "caption": "Evening",
+            "expanded": true,
+            "items": [
+                {
+                    "type": "CheckBox",
+                    "name": "EveningActive",
+                    "caption": "Active"
+                },
+                {
+                    "type": "RowLayout",
+                    "items": [
+                        {
+                            "type": "NumberSpinner",
+                            "name": "EveningLux",
+                            "caption": "Threshold",
+                            "digits": 0,
+                            "suffix": "lx"
+                        },
+                        {
+                            "type": "NumberSpinner",
+                            "name": "EveningDuration",
+                            "caption": "Duration",
+                            "digits": 0,
+                            "suffix": "min."
+                        }
+                    ]
+                },
+                {
+                    "type": "RowLayout",
+                    "items": [
+                        {
+                            "type": "SelectTime",
+                            "name": "EveningStartTime",
+                            "caption": "Start time"
+                        },
+                        {
+                            "type": "SelectTime",
+                            "name": "EveningEndTime",
+                            "caption": "End time"
+                        }
+                    ]
+                },
+                {
+                    "type": "Label",
+                    "caption": "Evening-Helptext"
+                }
+            ]
         }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Abends",
-      "expanded": true,
-      "items": [
+    ],
+    "actions": [],
+    "status": [
         {
-          "type": "CheckBox",
-          "name": "EveningActive",
-          "caption": "Aktiv"
-        },
-        {
-          "type": "RowLayout",
-          "items": [
-            {
-              "type": "NumberSpinner",
-              "name": "EveningLux",
-              "caption": "Schwellwert",
-              "digits": 0,
-              "suffix": "lx"
-            },
-            {
-              "type": "NumberSpinner",
-              "name": "EveningDuration",
-              "caption": "Dauer",
-              "digits": 0,
-              "suffix": "min."
-            }
-          ]
-        },
-        {
-          "type": "RowLayout",
-          "items": [
-            {
-              "type": "SelectTime",
-              "name": "EveningStartTime",
-              "caption": "Startzeit"
-            },
-            {
-              "type": "SelectTime",
-              "name": "EveningEndTime",
-              "caption": "Endzeit"
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "Es wird eingeschaltet, sobald der Schwellwert nach der konfigurierten Startzeit bzw. die Startzeit bei bereits erreichtem Schwellwert erreicht wurde.\nAusgeschaltet wird sobald die Dauer abgelaufen ist oder die Endzeit erreicht wurde."
+            "code": 201,
+            "icon": "error",
+            "caption": "Please select a brightness sensor."
         }
-      ]
-    }
-  ],
-  "actions": [
-
-  ],
-  "status": [
-
-  ]
+    ]
 }

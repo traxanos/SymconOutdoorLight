@@ -33,16 +33,21 @@ class OutdoorLight extends IPSModule
 
     public function ApplyChanges()
     {
+        // Never delete this line!
         parent::ApplyChanges();
+
         if ($this->ReadPropertyInteger('BrightnessId') > 0) {
-            $this->CreateDurationEvent();
-            $this->CreateMorningLearnEvent();
-            $this->CreateMorningStartEvent();
-            $this->CreateMorningEndEvent();
-            $this->CreateEveningLuxEvent();
-            $this->CreateEveningStartEvent();
-            $this->CreateEveningEndEvent();
+            $this->SetStatus(201);
+            return;
         }
+
+        $this->CreateDurationEvent();
+        $this->CreateMorningLearnEvent();
+        $this->CreateMorningStartEvent();
+        $this->CreateMorningEndEvent();
+        $this->CreateEveningLuxEvent();
+        $this->CreateEveningStartEvent();
+        $this->CreateEveningEndEvent();
     }
 
     public function ExecuteEvent(string $type)
