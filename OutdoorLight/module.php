@@ -38,6 +38,19 @@ class OutdoorLight extends IPSModule
 
         if ($this->ReadPropertyInteger('BrightnessId') == 0) {
             $this->SetStatus(201);
+
+            $luxDependendEvents = [
+                'MorningStartEvent',
+                'MorningLearnEvent',
+                'EveningLuxEvent',
+                'EveningStartEvent'
+            ];
+            foreach ($luxDependendEvents as $eventName) {
+                if ($event = @$this->GetIDForIdent($eventName)) {
+                    IPS_SetEventActive($event, false);
+                }
+            }
+
             return;
         }
 
@@ -48,6 +61,8 @@ class OutdoorLight extends IPSModule
         $this->CreateEveningLuxEvent();
         $this->CreateEveningStartEvent();
         $this->CreateEveningEndEvent();
+
+        $this->SetStatus(102);
     }
 
     public function ExecuteEvent(string $type)
