@@ -54,19 +54,21 @@ class OutdoorLight extends IPSModule
             return;
         }
 
-        $this->CreateDurationEvent();
-        $this->CreateMorningLearnEvent();
-        $this->CreateMorningStartEvent();
-        $this->CreateMorningEndEvent();
-        $this->CreateEveningLuxEvent();
-        $this->CreateEveningStartEvent();
-        $this->CreateEveningEndEvent();
+        $this->LogMessage('ApplyChanges', KL_DEBUG);
+        $this->ApplyDurationEvent();
+        $this->ApplyMorningLearnEvent();
+        $this->ApplyMorningStartEvent();
+        $this->ApplyMorningEndEvent();
+        $this->ApplyEveningLuxEvent();
+        $this->ApplyEveningStartEvent();
+        $this->ApplyEveningEndEvent();
 
         $this->SetStatus(102);
     }
 
     public function ExecuteEvent(string $type)
     {
+        $this->LogMessage("ExecuteEvent: #$type", KL_NOTIFY);
         if ($type == 'MorningOn' || $type == 'EveningOn') {
             $duration = $this->ReadPropertyInteger(substr($type, 0, 7) . 'Duration');
             $this->TurnOn($duration);
@@ -79,10 +81,12 @@ class OutdoorLight extends IPSModule
 
     protected function TurnOn(int $duration = 1)
     {
+        $this->LogMessage('Turn On', KL_MESSAGE);
         $event = $this->GetIDForIdent('DurationEvent');
         IPS_SetEventActive($event, true);
 
         $time = new DateTime("+ $duration minutes");
+        $this->LogMessage('Enable duration event for ' . $time->format('H:i:s'), KL_DEBUG);
         IPS_SetEventCyclicTimeFrom(
             $event,
             $time->format('H'),
@@ -95,6 +99,8 @@ class OutdoorLight extends IPSModule
 
     protected function TurnOff()
     {
+        $this->LogMessage('Turn Off', KL_MESSAGE);
+
         $event = $this->GetIDForIdent('DurationEvent');
         IPS_SetEventActive($event, false);
 
@@ -107,7 +113,11 @@ class OutdoorLight extends IPSModule
         $duration = $this->ReadPropertyInteger('MorningDuration');
         $time = $this->ReadPropertyTime('MorningStartTime');
         $calcTime = new DateTime("- $duration minutes");
+
+        $this->LogMessage('Calculate morning start date: ' . $nextDay->format('H:i:s'), KL_DEBUG);
+
         if ($time < $calcTime) {
+            $this->LogMessage('The start time is too early and will be adjusted', KL_DEBUG);
             $time = $calcTime;
         }
         IPS_SetEventCyclicTimeFrom(
@@ -124,7 +134,7 @@ class OutdoorLight extends IPSModule
         );
     }
 
-    protected function CreateDurationEvent()
+    protected function ApplyDurationEvent()
     {
         $instance = $this->InstanceID;
         $status = $this->GetIDForIdent('Status');
@@ -132,7 +142,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'Off');");
     }
 
-    protected function CreateMorningLearnEvent()
+    protected function ApplyMorningLearnEvent()
     {
         $found = @$this->GetIDForIdent('MorningLearnEvent');
         $instance = $this->InstanceID;
@@ -157,7 +167,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'MorningLearn');");
     }
 
-    protected function CreateEveningLuxEvent()
+    protected function ApplyEveningLuxEvent()
     {
         $instance = $this->InstanceID;
         $status = $this->GetIDForIdent('Status');
@@ -175,7 +185,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'EveningOn');");
     }
 
-    protected function CreateMorningStartEvent()
+    protected function ApplyMorningStartEvent()
     {
         $instance = $this->InstanceID;
         $found = @$this->GetIDForIdent('MorningStartEvent');
@@ -192,7 +202,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'MorningOn');");
     }
 
-    protected function CreateEveningStartEvent()
+    protected function ApplyEveningStartEvent()
     {
         $instance = $this->InstanceID;
         $status = $this->GetIDForIdent('Status');
@@ -207,7 +217,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'EveningOn');");
     }
 
-    protected function CreateMorningEndEvent()
+    protected function ApplyMorningEndEvent()
     {
         $instance = $this->InstanceID;
         $event = $this->CreateEvent('MorningEndEvent', 1);
@@ -216,7 +226,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'Off');");
     }
 
-    protected function CreateEveningEndEvent()
+    protected function ApplyEveningEndEvent()
     {
         $instance = $this->InstanceID;
         $event = $this->CreateEvent('EveningEndEvent', 1);
