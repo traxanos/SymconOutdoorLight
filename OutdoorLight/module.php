@@ -103,7 +103,7 @@ class OutdoorLight extends IPSModule
 
     protected function CalcMoringStartTime()
     {
-        $event = $this->GetIDForIdent('MorningStartEvent');
+        $startEvent = $this->GetIDForIdent('MorningStartEvent');
         $duration = $this->ReadPropertyInteger('MorningDuration');
         $time = $this->ReadPropertyTime('MorningStartTime');
         $calcTime = new DateTime("- $duration minutes");
@@ -111,15 +111,15 @@ class OutdoorLight extends IPSModule
             $time = $calcTime;
         }
         IPS_SetEventCyclicTimeFrom(
-            $event,
+            $startEvent,
             $time->format('H'),
             $time->format('i'),
             $time->format('s')
         );
 
         $nextDay = new DateTime('+ 1 day');
-        $event = $this->GetIDForIdent('MorningLearnEvent');
-        IPS_SetEventConditionDateRule($event, 0, 1, 3,
+        $learnEvent = $this->GetIDForIdent('MorningLearnEvent');
+        IPS_SetEventConditionDateRule($learnEvent, 0, 1, 3,
             $nextDay->format('d'), $nextDay->format('m'), $nextDay->format('Y')
         );
     }
