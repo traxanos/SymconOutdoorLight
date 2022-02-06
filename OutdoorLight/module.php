@@ -68,7 +68,7 @@ class OutdoorLight extends IPSModule
 
     public function ExecuteEvent(string $type)
     {
-        $this->LogMessage("ExecuteEvent: $type", KL_NOTIFY);
+        $this->LogMessage("ExecuteEvent: $type", KL_DEBUG);
         if ($type == 'MorningOn' || $type == 'EveningOn') {
             $duration = $this->ReadPropertyInteger(substr($type, 0, 7) . 'Duration');
             $this->TurnOn($duration);
@@ -81,7 +81,7 @@ class OutdoorLight extends IPSModule
 
     protected function TurnOn(int $duration = 1)
     {
-        $this->LogMessage('Turn On', KL_MESSAGE);
+        $this->LogMessage('Turn On', KL_DEBUG);
         $event = $this->GetIDForIdent('DurationEvent');
         IPS_SetEventActive($event, true);
 
@@ -99,7 +99,7 @@ class OutdoorLight extends IPSModule
 
     protected function TurnOff()
     {
-        $this->LogMessage('Turn Off', KL_MESSAGE);
+        $this->LogMessage('Turn Off', KL_DEBUG);
 
         $event = $this->GetIDForIdent('DurationEvent');
         IPS_SetEventActive($event, false);
