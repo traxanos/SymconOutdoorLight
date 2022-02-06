@@ -12,7 +12,7 @@ class TwilightSwitch extends IPSModule
         // Properties
         $this->RegisterPropertyInteger('BrightnessId', 0);
         $this->RegisterPropertyBoolean('MorningActive', true);
-        $this->RegisterPropertyInteger('MorningLux', 50);
+        $this->RegisterPropertyInteger('MorningLux', 100);
         $this->RegisterPropertyInteger('MorningDuration', 120);
         $this->RegisterPropertyString('MorningStartTime', '{"hour":5,"minute":0,"second":0}');
         $this->RegisterPropertyString('MorningEndTime', '{"hour":9,"minute":0,"second":0}');
