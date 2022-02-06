@@ -113,8 +113,8 @@ class TwilightSwitch extends IPSModule
         $duration = $this->ReadPropertyInteger('MorningDuration');
         $time = $this->ReadPropertyTime('MorningStartTime');
         $calcTime = new DateTime("- $duration minutes");
+        $this->LogMessage('Calculate morning start date: ' . $calcTime->format('H:i:s'), KL_DEBUG);
 
-        $this->LogMessage('Calculate morning start date: ' . $nextDay->format('H:i:s'), KL_DEBUG);
 
         if ($time < $calcTime) {
             $this->LogMessage('The start time is too early and will be adjusted', KL_DEBUG);
