@@ -1,13 +1,13 @@
 {
     "id": "{CFF937C7-58C1-A3EC-386F-296634D1FAE7}",
-    "name": "OutdoorLight",
+    "name": "TwilightSwitch",
     "type": 3,
     "vendor": "",
     "aliases": [
-        "Außenbeleuchtung", "Aussenbeleuchtung", "Outdoor Light"
+        "Dämmerungsschalter", "Twilight Switch"
     ],
     "parentRequirements": [],
     "childRequirements": [],
     "implemented": [],
-    "prefix": "OL"
+    "prefix": "TS"
 }

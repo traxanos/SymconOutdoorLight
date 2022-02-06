@@ -1,12 +1,12 @@
 {
     "id": "{45931009-0771-2777-BBFD-FF4DCC74EB8C}",
     "author": "Marco Scholl",
-    "name": "SymconOutdoorLight",
-    "url": "https://github.com/traxanos/SymconOutdoorLight",
+    "name": "SymconTwilightSwitch",
+    "url": "https://github.com/traxanos/SymconTwilightSwitch",
     "version": "0.9",
     "build": 0,
+    "date": 0,
     "compatibility": {
         "version": "5.0"
-    },
-    "date": 1643929241
+    }
 }

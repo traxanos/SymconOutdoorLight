@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class OutdoorLight extends IPSModule
+class TwilightSwitch extends IPSModule
 {
     public function Create()
     {
@@ -139,7 +139,7 @@ class OutdoorLight extends IPSModule
         $instance = $this->InstanceID;
         $status = $this->GetIDForIdent('Status');
         $event = $this->CreateEvent('DurationEvent', 1);
-        IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'Off');");
+        IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'Off');");
     }
 
     protected function ApplyMorningLearnEvent()
@@ -164,7 +164,7 @@ class OutdoorLight extends IPSModule
             );
         }
 
-        IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'MorningLearn');");
+        IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'MorningLearn');");
     }
 
     protected function ApplyEveningLuxEvent()
@@ -182,7 +182,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventConditionTimeRule($event, 0, 2, 2,
             $time->format('H'), $time->format('i'), $time->format('s')
         );
-        IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'EveningOn');");
+        IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'EveningOn');");
     }
 
     protected function ApplyMorningStartEvent()
@@ -199,7 +199,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventActive($event, $this->ReadPropertyBoolean('MorningActive'));
         IPS_SetEventCondition($event, 0, 0, 0);
         IPS_SetEventConditionVariableRule($event, 0, 1, $status, 0, false);
-        IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'MorningOn');");
+        IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'MorningOn');");
     }
 
     protected function ApplyEveningStartEvent()
@@ -214,7 +214,7 @@ class OutdoorLight extends IPSModule
         IPS_SetEventCondition($event, 0, 0, 0);
         IPS_SetEventConditionVariableRule($event, 0, 1, $status, 0, false);
         IPS_SetEventConditionVariableRule($event, 0, 2, $brightness_id, 5, $lux);
-        IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'EveningOn');");
+        IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'EveningOn');");
     }
 
     protected function ApplyMorningEndEvent()
@@ -223,7 +223,7 @@ class OutdoorLight extends IPSModule
         $event = $this->CreateEvent('MorningEndEvent', 1);
         $this->SetEventCyclicTime($event, 'MorningEndTime');
         IPS_SetEventActive($event, $this->ReadPropertyBoolean('MorningActive'));
-        IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'Off');");
+        IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'Off');");
     }
 
     protected function ApplyEveningEndEvent()
@@ -232,7 +232,7 @@ class OutdoorLight extends IPSModule
         $event = $this->CreateEvent('EveningEndEvent', 1);
         $this->SetEventCyclicTime($event, 'EveningEndTime');
         IPS_SetEventActive($event, $this->ReadPropertyBoolean('EveningActive'));
-        IPS_SetEventScript($event, "OL_ExecuteEvent($instance, 'Off');");
+        IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'Off');");
     }
 
     protected function CreateEvent(string $ident, int $type)
