@@ -42,6 +42,7 @@ class TwilightSwitch extends IPSModule
             $luxDependendEvents = [
                 'MorningStartEvent',
                 'MorningLearnEvent',
+                'MorningLuxEvent',
                 'EveningLuxEvent',
                 'EveningStartEvent'
             ];
@@ -57,6 +58,7 @@ class TwilightSwitch extends IPSModule
         $this->LogMessage('ApplyChanges', KL_DEBUG);
         $this->ApplyDurationEvent();
         $this->ApplyMorningLearnEvent();
+        $this->ApplyMorningLuxEvent();
         $this->ApplyMorningStartEvent();
         $this->ApplyMorningEndEvent();
         $this->ApplyEveningLuxEvent();
@@ -69,9 +71,10 @@ class TwilightSwitch extends IPSModule
     public function ExecuteEvent(string $type)
     {
         $this->LogMessage("ExecuteEvent: $type", KL_DEBUG);
-        if ($type == 'MorningOn' || $type == 'EveningOn') {
-            $duration = $this->ReadPropertyInteger(substr($type, 0, 7) . 'Duration');
-            $this->TurnOn($duration);
+        if ($type == 'MorningOn') {
+            $this->MorningOn();
+        } elseif ($type == 'EveningOn') {
+            $this->EveningOn();
         } elseif ($type == 'MorningLearn') {
             $this->CalcMoringStartTime();
         } else {
@@ -79,10 +82,15 @@ class TwilightSwitch extends IPSModule
         }
     }
 
-    protected function TurnOn(int $duration = 1)
+    protected function MorningOn()
     {
-        $this->LogMessage('Turn On', KL_DEBUG);
+        SetValueBoolean($this->GetIDForIdent('Status'), true);
+    }
+
+    protected function EveningOn()
+    {
         $event = $this->GetIDForIdent('DurationEvent');
+        $duration = $this->ReadPropertyInteger('EveningDuration');
         IPS_SetEventActive($event, true);
 
         $time = new DateTime("+ $duration minutes");
@@ -99,8 +107,6 @@ class TwilightSwitch extends IPSModule
 
     protected function TurnOff()
     {
-        $this->LogMessage('Turn Off', KL_DEBUG);
-
         $event = $this->GetIDForIdent('DurationEvent');
         IPS_SetEventActive($event, false);
 
@@ -114,7 +120,6 @@ class TwilightSwitch extends IPSModule
         $time = $this->ReadPropertyTime('MorningStartTime');
         $calcTime = new DateTime("- $duration minutes");
         $this->LogMessage('Calculate morning start date: ' . $calcTime->format('H:i:s'), KL_DEBUG);
-
 
         if ($time < $calcTime) {
             $this->LogMessage('The start time is too early and will be adjusted', KL_DEBUG);
@@ -167,20 +172,44 @@ class TwilightSwitch extends IPSModule
         IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'MorningLearn');");
     }
 
+    protected function ApplyMorningLuxEvent()
+    {
+        $instance = $this->InstanceID;
+        $status = $this->GetIDForIdent('Status');
+        $event = $this->CreateEvent('MorningLuxEvent', 0);
+        IPS_SetEventActive($event, $this->ReadPropertyBoolean('MorningActive'));
+        IPS_SetEventCondition($event, 0, 0, 0);
+        IPS_SetEventConditionVariableRule($event, 0, 1, $status, 0, true);
+        IPS_SetEventTrigger($event, 2, $this->ReadPropertyInteger('BrightnessId'));
+        IPS_SetEventTriggerValue($event, $this->ReadPropertyInteger('MorningLux'));
+        IPS_SetEventTriggerSubsequentExecution($event, false);
+        $startTime = $this->ReadPropertyTime('MorningStartTime');
+        $endTime = $this->ReadPropertyTime('MorningEndTime');
+        IPS_SetEventConditionTimeRule($event, 0, 2, 2,
+            $startTime->format('H'), $startTime->format('i'), $startTime->format('s')
+        );
+        IPS_SetEventConditionTimeRule($event, 0, 3, 4,
+            $endTime->format('H'), $endTime->format('i'), $endTime->format('s')
+        );
+
+        IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'Off');");
+    }
+
     protected function ApplyEveningLuxEvent()
     {
         $instance = $this->InstanceID;
         $status = $this->GetIDForIdent('Status');
         $event = $this->CreateEvent('EveningLuxEvent', 0);
-        $time = $this->ReadPropertyTime('EveningStartTime');
         IPS_SetEventActive($event, $this->ReadPropertyBoolean('EveningActive'));
         IPS_SetEventTrigger($event, 3, $this->ReadPropertyInteger('BrightnessId'));
         IPS_SetEventTriggerValue($event, $this->ReadPropertyInteger('EveningLux'));
         IPS_SetEventTriggerSubsequentExecution($event, false);
         IPS_SetEventCondition($event, 0, 0, 0);
         IPS_SetEventConditionVariableRule($event, 0, 1, $status, 0, false);
+
+        $startTime = $this->ReadPropertyTime('EveningStartTime');
         IPS_SetEventConditionTimeRule($event, 0, 2, 2,
-            $time->format('H'), $time->format('i'), $time->format('s')
+            $startTime->format('H'), $startTime->format('i'), $startTime->format('s')
         );
         IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'EveningOn');");
     }
@@ -191,6 +220,8 @@ class TwilightSwitch extends IPSModule
         $found = @$this->GetIDForIdent('MorningStartEvent');
         $status = $this->GetIDForIdent('Status');
         $event = $this->CreateEvent('MorningStartEvent', 1);
+        $brightness_id = $this->ReadPropertyInteger('BrightnessId');
+        $lux = $this->ReadPropertyInteger('MorningLux');
         $eventData = IPS_GetEvent($event);
         $currentTime = $eventData['CyclicTimeFrom'];
         if (!$found) { // New created
@@ -199,6 +230,7 @@ class TwilightSwitch extends IPSModule
         IPS_SetEventActive($event, $this->ReadPropertyBoolean('MorningActive'));
         IPS_SetEventCondition($event, 0, 0, 0);
         IPS_SetEventConditionVariableRule($event, 0, 1, $status, 0, false);
+        IPS_SetEventConditionVariableRule($event, 0, 2, $brightness_id, 5, $lux);
         IPS_SetEventScript($event, "TS_ExecuteEvent($instance, 'MorningOn');");
     }
 
